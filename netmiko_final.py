@@ -17,6 +17,7 @@ password = "cisco"
 
 
 def motd():
+    print(device_ip)
     device_params = {
     "device_type": "cisco_ios",
     "ip": device_ip,
@@ -28,14 +29,13 @@ def motd():
 #     status_list = []
     
     with ConnectHandler(**device_params) as ssh:
-
         
-        result = ssh.send_command("show running-config | section banner motd", use_textfsm=False)
-        ssh.disconnect()
-        if "banner motd" in result:
-            match = re.search(r'banner motd \^C\n(.*?)\n\^C', result, re.DOTALL)
-            if match:
-                motd_text = match.group(1)
-                return motd_text
+        # result = ssh.send_command("show running-config | include banner motd", use_textfsm=False)
+        result = ssh.send_command("show running-config", use_textfsm=False)
+        print(result)
+        match = re.search(r"banner motd (\S)([\s\S]*?)\1", result, re.DOTALL)
+        if match:
+            motd_text = match.group(2).strip()
+            return motd_text
         else:
             return "Error: No MOTD Configured"
