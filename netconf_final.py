@@ -30,22 +30,38 @@ def check_interface(if_name):
         return True
     return False
 
-# def create():
-#     if check_interface(if_name):
-#             return "Cannot create: Interface loopback 66070276"
-
-#     netconf_config = """
-
-# """
-
-#     try:
-#         netconf_reply = netconf_edit_config(netconf_config)
-#         xml_data = netconf_reply.xml
-#         print(xml_data)
-#         if '<ok/>' in xml_data:
-#             return "<!!!REPLACEME with proper message!!!>"
-#     except:
-#         print("Error!")
+def create():
+    if check_interface(if_name):
+            return "Cannot create: Interface loopback 66070276"
+    else:
+        netconf_config = """
+        <config>
+              <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+                <interface>
+                  <name>{if_name}</name>
+                  <description>Created by NETCONF</description>
+                  <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">
+                    ianaift:softwareLoopback
+                  </type>
+                  <enabled>true</enabled>
+                  <ipv4 xmlns="urn:ietf:params:xml:ns:yang:ietf-ip">
+                    <address>
+                      <ip>172.2.76.1</ip>
+                      <netmask>255.255.255.0</netmask>
+                    </address>
+                  </ipv4>
+                </interface>
+              </interfaces>
+            </config>
+    """
+        try:
+            netconf_reply = netconf_edit_config(netconf_config)
+            xml_data = netconf_reply.xml
+            print(xml_data)
+            if '<ok/>' in xml_data:
+                return "Interface loopback 66070276 is created successfully using Netconf"
+        except:
+            print("Error!")
 
 
 # def delete():
@@ -86,8 +102,8 @@ def check_interface(if_name):
 #     except:
 #         print("Error!")
 
-# def netconf_edit_config(netconf_config):
-#     return  m.edit_config(target="running", config=netconf_config)
+def netconf_edit_config(netconf_config):
+    return  m.edit_config(target="running", config=netconf_config)
 
 
 # def status():
