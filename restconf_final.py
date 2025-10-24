@@ -68,3 +68,14 @@ def delete():
             )
         if 200 <= resp.status_code <= 299:
             return "Interface loopback 66070276 is deleted successfully using Restconf"
+        
+def enable():
+    if_name = f"Loopback66070276"
+    if not check_interface(if_name):
+        return "Cannot enable: Interface loopback 66070276 (checked by Restconf)"
+    else:
+        api_url = f"{api_base}/ietf-interfaces:interfaces/interface={if_name}"
+        yangConfig = {"ietf-interfaces:interface": {"enabled": True}}
+        resp = requests.patch(api_url, data=json.dumps(yangConfig), auth=basicauth, headers=headers, verify=False)
+        if 200 <= resp.status_code <= 299:
+            return "Interface loopback 66070276 is enabled successfully"
