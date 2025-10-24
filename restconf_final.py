@@ -78,4 +78,4 @@ def enable():
         yangConfig = {"ietf-interfaces:interface": {"enabled": True}}
         resp = requests.patch(api_url, data=json.dumps(yangConfig), auth=basicauth, headers=headers, verify=False)
         if 200 <= resp.status_code <= 299:
-            return "Interface loopback 66070276 is enabled successfully"
+            return "Interface loopback 66070276 is enabled successfully using Restconf"
