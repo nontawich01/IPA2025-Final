@@ -34,7 +34,7 @@ def create():
     if check_interface(if_name):
             return "Cannot create: Interface loopback 66070276"
     else:
-        netconf_config = """
+        netconf_config = f"""
         <config>
               <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
                 <interface>
@@ -68,7 +68,7 @@ def delete():
     if not check_interface(if_name):
             return "Cannot delete: Interface loopback 66070276"
     else:
-        netconf_config = """
+        netconf_config = f"""
         <config>
               <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
                 <interface operation="delete">
@@ -91,7 +91,7 @@ def delete():
 def enable():
     if not check_interface(if_name):
             return "Cannot enable: Interface loopback 66070276 (checked by Netconf)"
-    netconf_config = """
+    netconf_config = f"""
     <config>
           <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
             <interface>
@@ -111,41 +111,62 @@ def enable():
         print("Error!")
 
 
-# def disable():
-#     netconf_config = """<!!!REPLACEME with YANG data!!!>"""
+def disable():
+    if not check_interface(if_name):
+            return "Cannot disable: Interface loopback 66070276 (checked by Netconf)"
+    netconf_config = f"""
+    <config>
+          <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+            <interface>
+              <name>{if_name}</name>
+              <enabled>false</enabled>
+            </interface>
+          </interfaces>
+        </config>          
+    """
 
-#     try:
-#         netconf_reply = netconf_edit_config(netconf_config)
-#         xml_data = netconf_reply.xml
-#         print(xml_data)
-#         if '<ok/>' in xml_data:
-#             return "<!!!REPLACEME with proper message!!!>"
-#     except:
-#         print("Error!")
+    try:
+        netconf_reply = netconf_edit_config(netconf_config)
+        xml_data = netconf_reply.xml
+        print(xml_data)
+        if '<ok/>' in xml_data:
+            return "Interface loopback 66070276 is disabled successfully using Netconf"
+    except:
+        print("Error!")
 
 def netconf_edit_config(netconf_config):
     return  m.edit_config(target="running", config=netconf_config)
 
 
 # def status():
-#     netconf_filter = """<!!!REPLACEME with YANG data!!!>"""
+#     if not check_interface(if_name):
+#         return "No Interface loopback 66070276 (checked by Netconf)"
+#     netconf_filter = f"""
+#     <filter>
+#           <interfaces-state xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+#             <interface>
+#               <name>{if_name}</name>
+#             </interface>
+#           </interfaces-state>
+#         </filter>
+#     """
 
 #     try:
 #         # Use Netconf operational operation to get interfaces-state information
-#         netconf_reply = m.<!!!REPLACEME with the proper Netconf operation!!!>(filter=<!!!REPLACEME with netconf_filter!!!>)
+#         netconf_reply = m.get(filter=netconf_filter)
 #         print(netconf_reply)
-#         netconf_reply_dict = xmltodict.<!!!REPLACEME with the proper method!!!>(netconf_reply.xml)
-
+#         netconf_reply_dict = xmltodict.parse(netconf_reply.xml)
+#         iface = netconf_reply_dict.get("rpc-reply").get("data").get("interfaces-state").get("interface")
 #         # if there data return from netconf_reply_dict is not null, the operation-state of interface loopback is returned
-#         if <!!!REPLACEME with the proper condition!!!>:
+#         if iface:
 #             # extract admin_status and oper_status from netconf_reply_dict
-#             admin_status = <!!!REPLACEME!!!>
-#             oper_status = <!!!REPLACEME !!!>
+#             admin_status = iface.get("admin-status")
+#             oper_status = iface.get("oper-status")
 #             if admin_status == 'up' and oper_status == 'up':
-#                 return "<!!!REPLACEME with proper message!!!>"
+#                 return "Interface loopback 66070276 is enabled (checked by Restconf)"
 #             elif admin_status == 'down' and oper_status == 'down':
-#                 return "<!!!REPLACEME with proper message!!!>"
+#                 return "Interface loopback 66070276 is disabled (checked by Restconf)"
 #         else: # no operation-state data
-#             return "<!!!REPLACEME with proper message!!!>"
+#             return f"No operational data for interface {if_name}"
 #     except:
 #        print("Error!")
