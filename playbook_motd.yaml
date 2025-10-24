@@ -1,0 +1,10 @@
+---
+- name: Configure MOTD banner on Cisco routers
+  hosts: routers
+  gather_facts: no
+  tasks:
+    - name: Set MOTD banner
+      ios_banner:
+        banner: motd
+        text: "{{ motd_text }}"
+        state: present
