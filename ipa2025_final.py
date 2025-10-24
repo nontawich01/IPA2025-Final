@@ -12,6 +12,7 @@ import time
 import os
 import restconf_final
 import netconf_final
+import ansible_final
 import re
 
 from requests_toolbelt.multipart.encoder import MultipartEncoder
@@ -80,7 +81,19 @@ while True:
             responseMessage = "Ok: netconf"
         else:
             if method == "":
-                responseMessage = "Error: No method specified"
+                if re.match(ip_pattern, command):
+                    part = message.split(" ")
+                    if len(part) == 3:
+                        realcommand = part[2].strip()
+                        if realcommand == "motd":
+                            pass
+                        else:
+                            responseMessage = "Error: No method specified"
+                    elif len(part) == 4:
+                        motd = part[3].strip()
+                        responseMessage = ansible_final.motd(command, motd)
+                else:
+                    responseMessage = "Error: No method specified"
             else:
                 if re.match(ip_pattern, command):
                     
@@ -100,6 +113,12 @@ while True:
                                 responseMessage = restconf_final.disable()
                             elif realcommand == "status":
                                 responseMessage = restconf_final.status()
+                            elif realcommand == "motd":
+                                if len(part) == 3:
+                                    pass
+                                elif len(part) == 4:
+                                    motd = part[3].strip()
+                                    responseMessage = ansible_final.motd(command, motd)
                         elif method == "netconf":
                             netconf_final.ip = command
                             if realcommand == "create":
@@ -112,6 +131,14 @@ while True:
                                 responseMessage = netconf_final.disable()
                             elif realcommand == "status":
                                 responseMessage = netconf_final.status()
+                            elif realcommand == "motd":
+                                if len(part) == 3:
+                                    pass
+                                elif len(part) == 4:
+                                    motd = part[3].strip()
+                                    responseMessage = ansible_final.motd(command, motd)
+
+
                     else:
                         responseMessage = "Error: No command found."
 
