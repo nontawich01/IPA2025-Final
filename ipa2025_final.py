@@ -91,8 +91,8 @@ while True:
                             responseMessage = netmiko_final.motd()
                         else:
                             responseMessage = "Error: No method specified"
-                    elif len(part) == 4:
-                        motd = part[3].strip()
+                    elif len(part) > 3:
+                        motd = " ".join(part[3:]).strip()
                         responseMessage = ansible_final.motd(command, motd)
                 else:
                     responseMessage = "Error: No method specified"
@@ -119,8 +119,8 @@ while True:
                                 if len(part) == 3:
                                     netmiko_final.device_ip=command
                                     responseMessage = netmiko_final.motd()
-                                elif len(part) == 4:
-                                    motd = part[3].strip()
+                                elif len(part) > 3:
+                                    motd = " ".join(part[3:]).strip()
                                     responseMessage = ansible_final.motd(command, motd)
                         elif method == "netconf":
                             netconf_final.ip = command
@@ -138,8 +138,8 @@ while True:
                                 if len(part) == 3:
                                     netmiko_final.device_ip=command
                                     responseMessage = netmiko_final.motd()
-                                elif len(part) == 4:
-                                    motd = part[3].strip()
+                                elif len(part) > 3:
+                                    motd = " ".join(part[3:]).strip()
                                     responseMessage = ansible_final.motd(command, motd)
 
 
