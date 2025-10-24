@@ -138,35 +138,35 @@ def netconf_edit_config(netconf_config):
     return  m.edit_config(target="running", config=netconf_config)
 
 
-# def status():
-#     if not check_interface(if_name):
-#         return "No Interface loopback 66070276 (checked by Netconf)"
-#     netconf_filter = f"""
-#     <filter>
-#           <interfaces-state xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
-#             <interface>
-#               <name>{if_name}</name>
-#             </interface>
-#           </interfaces-state>
-#         </filter>
-#     """
+def status():
+    if not check_interface(if_name):
+        return "No Interface loopback 66070276 (checked by Netconf)"
+    netconf_filter = f"""
+    <filter>
+          <interfaces-state xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+            <interface>
+              <name>{if_name}</name>
+            </interface>
+          </interfaces-state>
+        </filter>
+    """
 
-#     try:
-#         # Use Netconf operational operation to get interfaces-state information
-#         netconf_reply = m.get(filter=netconf_filter)
-#         print(netconf_reply)
-#         netconf_reply_dict = xmltodict.parse(netconf_reply.xml)
-#         iface = netconf_reply_dict.get("rpc-reply").get("data").get("interfaces-state").get("interface")
-#         # if there data return from netconf_reply_dict is not null, the operation-state of interface loopback is returned
-#         if iface:
-#             # extract admin_status and oper_status from netconf_reply_dict
-#             admin_status = iface.get("admin-status")
-#             oper_status = iface.get("oper-status")
-#             if admin_status == 'up' and oper_status == 'up':
-#                 return "Interface loopback 66070276 is enabled (checked by Restconf)"
-#             elif admin_status == 'down' and oper_status == 'down':
-#                 return "Interface loopback 66070276 is disabled (checked by Restconf)"
-#         else: # no operation-state data
-#             return f"No operational data for interface {if_name}"
-#     except:
-#        print("Error!")
+    try:
+        # Use Netconf operational operation to get interfaces-state information
+        netconf_reply = m.get(filter=netconf_filter)
+        print(netconf_reply)
+        netconf_reply_dict = xmltodict.parse(netconf_reply.xml)
+        iface = netconf_reply_dict.get("rpc-reply").get("data").get("interfaces-state").get("interface")
+        # if there data return from netconf_reply_dict is not null, the operation-state of interface loopback is returned
+        if iface:
+            # extract admin_status and oper_status from netconf_reply_dict
+            admin_status = iface.get("admin-status")
+            oper_status = iface.get("oper-status")
+            if admin_status == 'up' and oper_status == 'up':
+                return "Interface loopback 66070276 is enabled (checked by Restconf)"
+            elif admin_status == 'down' and oper_status == 'down':
+                return "Interface loopback 66070276 is disabled (checked by Restconf)"
+        else: # no operation-state data
+            return f"No operational data for interface {if_name}"
+    except:
+       print("Error!")
