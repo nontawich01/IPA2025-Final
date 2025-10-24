@@ -30,7 +30,7 @@ def motd():
     with ConnectHandler(**device_params) as ssh:
 
         
-        result = ssh.send_command("show running-config | section banner motd", use_textfsm=True)
+        result = ssh.send_command("show running-config | section banner motd", use_textfsm=False)
         ssh.disconnect()
         if "banner motd" in result:
             match = re.search(r'banner motd \^C\n(.*?)\n\^C', result, re.DOTALL)
