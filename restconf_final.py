@@ -52,3 +52,19 @@ def create():
         if 200 <= resp.status_code <= 299:
             return "Interface loopback 66070276 is created successfully using Restconf"
     
+def delete():
+    if_name = f"Loopback66070276"
+
+    if not check_interface(if_name):
+        return "Cannot delete: Interface loopback 66070276"
+        
+    else:
+        api_url = f"{api_base}/ietf-interfaces:interfaces/interface={if_name}"
+        resp = requests.delete(
+            api_url,
+            auth=basicauth,
+            headers=headers,
+            verify=False
+            )
+        if 200 <= resp.status_code <= 299:
+            return "Interface loopback 66070276 is deleted successfully using Restconf"
