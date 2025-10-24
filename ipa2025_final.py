@@ -11,6 +11,7 @@ import json
 import time
 import os
 import restconf_final
+import netconf_final
 import re
 
 from requests_toolbelt.multipart.encoder import MultipartEncoder
@@ -100,7 +101,17 @@ while True:
                             elif realcommand == "status":
                                 responseMessage = restconf_final.status()
                         elif method == "netconf":
-                            pass
+                            netconf_final.ip = command
+                            if realcommand == "create":
+                                responseMessage = netconf_final.create()
+                            elif realcommand == "delete":
+                                responseMessage = netconf_final.delete()
+                            elif realcommand == "enable":
+                                responseMessage = netconf_final.enable()
+                            elif realcommand == "disable":
+                                responseMessage = netconf_final.disable()
+                            elif realcommand == "status":
+                                responseMessage = netconf_final.status()
                     else:
                         responseMessage = "Error: No command found."
 
