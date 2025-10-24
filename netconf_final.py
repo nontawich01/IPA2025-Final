@@ -64,17 +64,28 @@ def create():
             print("Error!")
 
 
-# def delete():
-#     netconf_config = """<!!!REPLACEME with YANG data!!!>"""
+def delete():
+    if not check_interface(if_name):
+            return "Cannot delete: Interface loopback 66070276"
+    else:
+        netconf_config = """
+        <config>
+              <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+                <interface operation="delete">
+                  <name>{if_name}</name>
+                </interface>
+              </interfaces>
+            </config>
+        """
 
-#     try:
-#         netconf_reply = netconf_edit_config(netconf_config)
-#         xml_data = netconf_reply.xml
-#         print(xml_data)
-#         if '<ok/>' in xml_data:
-#             return "<!!!REPLACEME with proper message!!!>"
-#     except:
-#         print("Error!")
+        try:
+            netconf_reply = netconf_edit_config(netconf_config)
+            xml_data = netconf_reply.xml
+            print(xml_data)
+            if '<ok/>' in xml_data:
+                return "Interface loopback 66070276 is deleted successfully using Netconf"
+        except:
+            print("Error!")
 
 
 # def enable():
