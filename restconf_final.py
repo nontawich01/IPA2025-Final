@@ -90,3 +90,22 @@ def disable():
         resp = requests.patch(api_url, data=json.dumps(yangConfig), auth=basicauth, headers=headers, verify=False)
         if 200 <= resp.status_code <= 299:
             return "Interface loopback 66070276 is shutdowned successfully using Restconf"
+        
+
+def status():
+    if_name = f"Loopback66070276"
+    if not check_interface(if_name):
+        return "No Interface loopback 66070276 (checked by Restconf)"
+    else:
+
+        api_url_status = f"https://{router_ip}/restconf/data/ietf-interfaces:interfaces-state/interface=Loopback66070276"
+        resp = requests.get(api_url_status, auth=basicauth, headers=headers, verify=False)
+
+        if 200 <= resp.status_code <= 299:
+            data = resp.json()
+            admin_status = data["ietf-interfaces:interface"]["admin-status"]
+            oper_status = data["ietf-interfaces:interface"]["oper-status"]
+            if admin_status == "up" and oper_status == "up":
+                return "Interface loopback 66070276 is enabled (checked by Restconf)"
+            elif admin_status == "down" and oper_status == "down":
+                return "Interface loopback 66070276 is disabled (checked by Restconf)"
