@@ -13,6 +13,7 @@ import os
 import restconf_final
 import netconf_final
 import ansible_final
+import netmiko_final
 import re
 
 from requests_toolbelt.multipart.encoder import MultipartEncoder
@@ -86,7 +87,8 @@ while True:
                     if len(part) == 3:
                         realcommand = part[2].strip()
                         if realcommand == "motd":
-                            pass
+                            netmiko_final.device_ip=command
+                            responseMessage = netmiko_final.motd()
                         else:
                             responseMessage = "Error: No method specified"
                     elif len(part) == 4:
@@ -115,7 +117,8 @@ while True:
                                 responseMessage = restconf_final.status()
                             elif realcommand == "motd":
                                 if len(part) == 3:
-                                    pass
+                                    netmiko_final.device_ip=command
+                                    responseMessage = netmiko_final.motd()
                                 elif len(part) == 4:
                                     motd = part[3].strip()
                                     responseMessage = ansible_final.motd(command, motd)
@@ -133,7 +136,8 @@ while True:
                                 responseMessage = netconf_final.status()
                             elif realcommand == "motd":
                                 if len(part) == 3:
-                                    pass
+                                    netmiko_final.device_ip=command
+                                    responseMessage = netmiko_final.motd()
                                 elif len(part) == 4:
                                     motd = part[3].strip()
                                     responseMessage = ansible_final.motd(command, motd)
