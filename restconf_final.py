@@ -3,7 +3,7 @@ import requests
 requests.packages.urllib3.disable_warnings()
 
 router_ip = ""  
-api_base = f"https://{router_ip}/restconf/data/ietf-interfaces:interfaces"
+# api_base = f"https://{router_ip}/restconf/data/ietf-interfaces:interfaces"
 
 headers = {
     "Accept": "application/yang-data+json",
@@ -13,6 +13,7 @@ headers = {
 basicauth = ("admin", "cisco")
 
 def check_interface(if_name):
+    api_base = f"https://{router_ip}/restconf/data/ietf-interfaces:interfaces"
     url = f"{api_base}/interface={if_name}?fields=name"
     resp = requests.get(url, auth=basicauth, headers=headers, verify=False, timeout=10)
     if resp.status_code == 200:
@@ -21,6 +22,7 @@ def check_interface(if_name):
         return False
     
 def create():
+    api_base = f"https://{router_ip}/restconf/data/ietf-interfaces:interfaces"
     if_name = "Loopback66070276"
 
     if check_interface(if_name):
@@ -53,6 +55,7 @@ def create():
             return "Interface loopback 66070276 is created successfully using Restconf"
     
 def delete():
+    api_base = f"https://{router_ip}/restconf/data/ietf-interfaces:interfaces"
     if_name = f"Loopback66070276"
 
     if not check_interface(if_name):
@@ -70,6 +73,7 @@ def delete():
             return "Interface loopback 66070276 is deleted successfully using Restconf"
         
 def enable():
+    api_base = f"https://{router_ip}/restconf/data/ietf-interfaces:interfaces"
     if_name = f"Loopback66070276"
     if not check_interface(if_name):
         return "Cannot enable: Interface loopback 66070276 (checked by Restconf)"
@@ -81,10 +85,12 @@ def enable():
             return "Interface loopback 66070276 is enabled successfully using Restconf"
 
 def disable():
+    api_base = f"https://{router_ip}/restconf/data/ietf-interfaces:interfaces"
     if_name = f"Loopback66070276"
     if not check_interface(if_name):
         return "Cannot enable: Interface loopback 66070276 (checked by Restconf)"
     else:
+
         api_url = f"{api_base}/interface={if_name}"
         yangConfig = {"ietf-interfaces:interface": {"enabled": False}}
         resp = requests.patch(api_url, data=json.dumps(yangConfig), auth=basicauth, headers=headers, verify=False)
@@ -97,6 +103,7 @@ def status():
     if not check_interface(if_name):
         return "No Interface loopback 66070276 (checked by Restconf)"
     else:
+        
 
         api_url_status = f"https://{router_ip}/restconf/data/ietf-interfaces:interfaces-state/interface=Loopback66070276"
         resp = requests.get(api_url_status, auth=basicauth, headers=headers, verify=False)
