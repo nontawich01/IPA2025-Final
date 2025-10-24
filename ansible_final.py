@@ -6,7 +6,8 @@ import tempfile
 def motd(ip,motd):
     playbook_file = 'playbook_motd.yaml'
     inventory_file = None
-
+    print("before playbook")
+    print(motd)
     try:
         with tempfile.NamedTemporaryFile("w", delete=False) as temp_inv:
             temp_inv.write("[routers]\n")
