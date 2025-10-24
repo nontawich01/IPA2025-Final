@@ -117,3 +117,15 @@ while True:
 
                 else:
                     responseMessage = "Error: No IP specified"
+                    
+        print(responseMessage)
+        data = {"roomId": roomIdToGetMessages, "text": responseMessage}
+        rp = requests.post(
+            "https://webexapis.com/v1/messages",
+            headers=getHTTPHeader,
+            data=json.dumps(data)
+            )
+        if rp.status_code == 200:
+            print("Message sent to Webex successfully")
+        else:
+            print(f"Error sending message: {rp.status_code}")
