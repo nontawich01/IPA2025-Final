@@ -3,17 +3,24 @@ import xmltodict
 
 ip = ""
 
-m = manager.connect(
+# m = manager.connect(
+#     host=ip,
+#     port=830,
+#     username="admin",
+#     password="cisco",
+#     hostkey_verify=False
+#     )
+
+if_name = "Loopback66070276"
+
+def check_interface(if_name):
+    m = manager.connect(
     host=ip,
     port=830,
     username="admin",
     password="cisco",
     hostkey_verify=False
     )
-
-if_name = "Loopback66070276"
-
-def check_interface(if_name):
     filter_xml = f"""
     <filter>
         <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
@@ -31,6 +38,13 @@ def check_interface(if_name):
     return False
 
 def create():
+    m = manager.connect(
+    host=ip,
+    port=830,
+    username="admin",
+    password="cisco",
+    hostkey_verify=False
+    )
     if check_interface(if_name):
             return "Cannot create: Interface loopback 66070276"
     else:
@@ -65,6 +79,13 @@ def create():
 
 
 def delete():
+    m = manager.connect(
+    host=ip,
+    port=830,
+    username="admin",
+    password="cisco",
+    hostkey_verify=False
+    )
     if not check_interface(if_name):
             return "Cannot delete: Interface loopback 66070276"
     else:
@@ -89,6 +110,13 @@ def delete():
 
 
 def enable():
+    m = manager.connect(
+    host=ip,
+    port=830,
+    username="admin",
+    password="cisco",
+    hostkey_verify=False
+    )
     if not check_interface(if_name):
             return "Cannot enable: Interface loopback 66070276 (checked by Netconf)"
     netconf_config = f"""
@@ -112,6 +140,13 @@ def enable():
 
 
 def disable():
+    m = manager.connect(
+    host=ip,
+    port=830,
+    username="admin",
+    password="cisco",
+    hostkey_verify=False
+    )
     if not check_interface(if_name):
             return "Cannot disable: Interface loopback 66070276 (checked by Netconf)"
     netconf_config = f"""
@@ -135,10 +170,24 @@ def disable():
         print("Error!")
 
 def netconf_edit_config(netconf_config):
+    m = manager.connect(
+    host=ip,
+    port=830,
+    username="admin",
+    password="cisco",
+    hostkey_verify=False
+    )
     return  m.edit_config(target="running", config=netconf_config)
 
 
 def status():
+    m = manager.connect(
+    host=ip,
+    port=830,
+    username="admin",
+    password="cisco",
+    hostkey_verify=False
+    )
     if not check_interface(if_name):
         return "No Interface loopback 66070276 (checked by Netconf)"
     netconf_filter = f"""
