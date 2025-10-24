@@ -33,9 +33,9 @@ def motd():
         # result = ssh.send_command("show running-config | include banner motd", use_textfsm=False)
         result = ssh.send_command("show running-config", use_textfsm=False)
         print(result)
-        match = re.search(r"banner motd (\S)([\s\S]*?)\1", result, re.DOTALL)
+        match = re.search(r"banner motd \^C([\s\S]*?)\^C", result, re.DOTALL)
         if match:
-            motd_text = match.group(2).strip()
+            motd_text = match.group(1).strip()
             return motd_text
         else:
             return "Error: No MOTD Configured"
