@@ -11,7 +11,7 @@ import json
 import time
 import os
 import restconf_final
-
+import re
 
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
@@ -27,8 +27,9 @@ ROOM_ID =os.environ.get("ROOM_ID")
 roomIdToGetMessages = (
     ROOM_ID
 )
-
+ip_pattern = r'^(\d{1,3}\.){3}\d{1,3}$'
 method = ""
+responseMessage = ""
 
 while True:
     # always add 1 second of delay to the loop to not go over a rate limit of API calls
@@ -67,3 +68,41 @@ while True:
     message = messages[0]["text"]
     print("Received message: " + message)
 
+    if message.startswith("/66070276 "):
+        command = message.split(" ")[1].strip()
+        print("Command:", command)
+        if command == "restconf":
+            method = command
+            responseMessage = "Ok: Restconf"
+        elif command == "netconf":
+            method = command
+            responseMessage = "Ok: netconf"
+        else:
+            if method == "":
+                responseMessage = "Error: No method specified"
+            else:
+                if re.match(ip_pattern, command):
+                    
+                    part = message.split(" ")
+                    
+                    if len(part) > 2:
+                        realcommand = part[2].strip()
+                        if method == "restconf":
+                            restconf_final.router_ip = command
+                            if realcommand == "create":
+                                responseMessage = restconf_final.create()
+                            elif realcommand == "delete":
+                                responseMessage = restconf_final.delete()
+                            elif realcommand == "enable":
+                                responseMessage = restconf_final.enable()
+                            elif realcommand == "disable":
+                                responseMessage = restconf_final.disable()
+                            elif realcommand == "status":
+                                responseMessage = restconf_final.status()
+                        elif method == "netconf":
+                            pass
+                    else:
+                        responseMessage = "Error: No command found."
+
+                else:
+                    responseMessage = "Error: No IP specified"
